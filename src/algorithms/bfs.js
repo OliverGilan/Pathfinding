@@ -5,6 +5,11 @@ export function bfs(grid, n) {
     // const depth = grid.map((row) => row)
     
     var queue=[{r: 0, c: 0, d: 0}]
+    grid.forEach((row, i) => {
+        row.forEach((node, j) => {
+            node.isVisited = false
+        })
+    })
 
     while(queue.length){
         var coord = queue.shift()
@@ -37,7 +42,9 @@ export function bfs(grid, n) {
 
     // var reachable = visited[n-1][n-1] === -1 ? true : false
 
-    // console.log("nodes: " + visitedNodesInOrder)
+    // visitedNodesInOrder.forEach((node) => {
+    //     grid[node.row][node.col].isVisited = false
+    // })
     return visitedNodesInOrder
   }
   

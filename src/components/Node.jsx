@@ -23,7 +23,7 @@ export default class Node extends Component {
       <div
         id={`node-${row}-${col}`}
         className={`node ${extraClassName}`}>
-            <p className="val">{val}</p>
+            <p id={`val-${row}-${col}`} className="val">{val}</p>
             <p id={`depth-${row}-${col}`} className="depthCount">{depth}</p>
         </div>
     );

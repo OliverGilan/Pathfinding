@@ -3,6 +3,9 @@ import '../App.css';
 // import Cell from './Cell'
 import Node from './Node'
 import {bfs} from '../algorithms/bfs'
+import {evaluate} from '../algorithms/evaluate'
+import {climb} from '../algorithms/hillclimb'
+import {generateVal} from '../algorithms/generateVal'
 
 export default class Grid extends React.Component {
     constructor(props){
@@ -12,7 +15,8 @@ export default class Grid extends React.Component {
             loading: true,
             cells: null,
             refs: null,
-            grid: []
+            grid: [],
+            k: 0
         }
         this.cellRef = []
     }
@@ -28,13 +32,9 @@ export default class Grid extends React.Component {
         // })
         const n = prompt("Enter grid size (5,7,9,11)")
         const grid = getInitialGrid(n);
-        console.log(grid)
+        // console.log(grid)
         this.setState({grid, n});
     }
-
-    // getRandomInt(max) {
-    //     return Math.floor(Math.random() * Math.floor(max));
-    // }
 
     animateBFS(visitedNodesInOrder){
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
@@ -47,36 +47,53 @@ export default class Grid extends React.Component {
                 document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
                 document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
               }
-            }, 100 * i);
+            }, 10 * i);
         }
     }
 
-    // generateGrid(visitedNodesInOrder){
-    //     var cells = []
-    //     var refs = []
-    //     var x
-    //     var y
-    //     for(x=0; x<this.state.n; x++){
-    //         var row = []
-    //         var ref = []
-    //         for(y=0; y<this.state.n; y++){
-    //             // row.append(<Cell x={x} y={y} />)
-    //             var val = this.getRandomInt(1)
-    //             ref.push(React.createRef())
-    //             row.push(<Cell x={x} y={y} val={val} n={this.state.n} className="cell" ref={ref[ref.length-1]}/>)
-    //         }
-    //         cells.push(row)
-    //         refs.push(ref)
-    //     }
-    //     return [cells, refs];
-    // }
-
     evaluate = () => {
-        const {grid, n} = this.state;
-        const visitedNodesInOrder = bfs(grid, n);
+        const {grid, n} = this.state
+        const visitedNodesInOrder = bfs(grid, n)
         // console.log("visited: " + JSON.stringify(visitedNodesInOrder))
-        // console.log("visited: " + JSON.stringify(grid))
-        this.animateBFS(visitedNodesInOrder);
+        // console.log(grid)
+        this.animateBFS(visitedNodesInOrder)
+        const k = evaluate(grid, n)
+        this.setState({k});
+        document.getElementById("k-value").innerText = `k = ${k}`
+        document.getElementById(`k-value`).style.display = 'block'
+        document.getElementById(`eval-btn`).style.display = 'none'
+        document.getElementById(`optimize-btn`).style.display = 'block'
+    }
+
+    animateClimb = (newK, changedNodes) => {
+        document.getElementById(`k-value`).innerText = `k = ${newK}`
+        for(let i = 0; i <= changedNodes.length; i++){
+            if(i===changedNodes.length){
+                setTimeout(() => {
+                    this.evaluate()
+                }, 50 * i)
+                continue
+            }
+            setTimeout(() => {
+                const node = changedNodes[i];
+                if (node !== undefined){
+                    document.getElementById(`node-${node.row}-${node.col}`).className ='node node-optimized'
+                    document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth
+                    document.getElementById(`val-${node.row}-${node.col}`).innerText = node.val;
+                }
+            }, 10 * i)
+        }
+    }
+
+    optimize = () => {
+        const iter = prompt("Iteration count?")
+        var currK = this.state.k
+
+        var res = climb(this.state.grid, this.state.n, iter, currK)
+        var newK = res[0]
+        console.log(newK)
+        var changedNodes = res[1]
+        this.animateClimb(newK, changedNodes)
     }
 
     render(){
@@ -85,9 +102,11 @@ export default class Grid extends React.Component {
         // }
         const grid = this.state.grid
         return (
-            <div className="board">
+            <div className="board" style={{marginBottom: 25}}>
                 <h1>{this.state.n}x{this.state.n}</h1>
-                <button onClick={this.evaluate}>Evaluate</button>
+                <h4 id="k-value" style={{display:"none"}}>.</h4>
+                <button id="eval-btn" onClick={this.evaluate}>Evaluate</button>
+                <button id="optimize-btn" onClick={this.optimize} style={{display:"none"}}>Optimize w/ Hill Climbing</button>
                 {grid.map((row, i) => {
                     return <div className="row" key={i}>
                         {row.map((cell, j) => {
@@ -132,17 +151,17 @@ const getInitialGrid = (n) => {
     return grid;
 };
 
-const generateVal = (col, row, n) => {
-    // const minimum_move = 1
-    const maximum_move = Math.max(n-1-row, row, n-1-col, col)
-    if(row===n/2 && col === n/2){
-        return Math.floor(Math.random() * ((n/2))) + 1
-    }else if(row === n-1 && col === n-1){
-        return 0
-    }else{
-        return Math.floor((Math.random() * maximum_move)) + 1
-    }
-}
+// const generateVal = (col, row, n) => {
+//     // const minimum_move = 1
+//     const maximum_move = Math.max(n-1-row, row, n-1-col, col)
+//     if(row===n/2 && col === n/2){
+//         return Math.floor(Math.random() * ((n/2))) + 1
+//     }else if(row === n-1 && col === n-1){
+//         return 0
+//     }else{
+//         return Math.floor((Math.random() * maximum_move)) + 1
+//     }
+// }
 
 const createNode = (col, row, n) => {
   return {
@@ -157,3 +176,7 @@ const createNode = (col, row, n) => {
     previousNode: null,
   };
 };
+
+// const getRandomInt = (max) => {
+//     return Math.floor(Math.random() * Math.floor(max));
+// }
