@@ -38,12 +38,14 @@ export default class Grid extends React.Component {
 
     animateBFS(visitedNodesInOrder){
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
-            // console.log(visitedNodesInOrder)
             setTimeout(() => {
               const node = visitedNodesInOrder[i];
-              if (node !== undefined){
+              if (node !== undefined && node.isPath){
                 document.getElementById(`node-${node.row}-${node.col}`).className =
                     'node node-visited';
+                document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
+                document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
+              }else if (node !== undefined){
                 document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
                 document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
               }
@@ -54,8 +56,7 @@ export default class Grid extends React.Component {
     evaluate = () => {
         const {grid, n} = this.state
         const visitedNodesInOrder = bfs(grid, n)
-        // console.log("visited: " + JSON.stringify(visitedNodesInOrder))
-        // console.log(grid)
+
         this.animateBFS(visitedNodesInOrder)
         const k = evaluate(grid, n)
         this.setState({k});
@@ -122,15 +123,6 @@ export default class Grid extends React.Component {
                                     n={this.state.n} 
                                     row={row}></Node>
                             )
-                            // return <Cell 
-                            // key={j}
-                            // row={row} 
-                            // col={col} 
-                            // val={val} 
-                            // isStart={isStart}
-                            // isFinish={isFinish}
-                            // n={this.state.n} 
-                            // className="cell" ref={ref[ref.length-1]}/>
                     })} 
                     </div>
                 })}
@@ -151,18 +143,6 @@ const getInitialGrid = (n) => {
     return grid;
 };
 
-// const generateVal = (col, row, n) => {
-//     // const minimum_move = 1
-//     const maximum_move = Math.max(n-1-row, row, n-1-col, col)
-//     if(row===n/2 && col === n/2){
-//         return Math.floor(Math.random() * ((n/2))) + 1
-//     }else if(row === n-1 && col === n-1){
-//         return 0
-//     }else{
-//         return Math.floor((Math.random() * maximum_move)) + 1
-//     }
-// }
-
 const createNode = (col, row, n) => {
   return {
     col,
@@ -174,9 +154,6 @@ const createNode = (col, row, n) => {
     isVisited: false,
     isWall: false,
     previousNode: null,
+    isPath: false
   };
 };
-
-// const getRandomInt = (max) => {
-//     return Math.floor(Math.random() * Math.floor(max));
-// }

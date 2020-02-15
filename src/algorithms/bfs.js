@@ -1,10 +1,9 @@
 
 export function bfs(grid, n) {
     const visitedNodesInOrder = [];
-    // const visited = grid.map((row) => row)
-    // const depth = grid.map((row) => row)
     
-    var queue=[{r: 0, c: 0, d: 0}]
+    var stack=[]
+    var queue=[{r: 0, c: 0, d: 0, j: 0}]
     grid.forEach((row, i) => {
         row.forEach((node, j) => {
             node.isVisited = false
@@ -13,38 +12,53 @@ export function bfs(grid, n) {
 
     while(queue.length){
         var coord = queue.shift()
-        const {r, c, d} = coord
+        const {r, c, d, j} = coord
 
         if(grid[r][c].isVisited){continue}
+        stack.push(coord)
         grid[r][c].isVisited = true
         grid[r][c].depth = d
 
         var node = grid[r][c]
-        // console.log("node : " + JSON.stringify(node))
         visitedNodesInOrder.push(node)
         const jump = node.val
 
         if(r === n-1 && c === n-1){break}
 
         if(r + jump < n){
-            queue.push({r: r+jump, c: c, d: d+1})
+            queue.push({r: r+jump, c: c, d: d+1, j: jump})
         }
         if(r - jump >= 0){
-            queue.push({r: r-jump, c: c, d: d+1})
+            queue.push({r: r-jump, c: c, d: d+1, j: jump*-1})
         }
         if(c + jump < n){
-            queue.push({r: r, c: c + jump, d: d+1})
+            queue.push({r: r, c: c + jump, d: d+1, j: jump})
         }
         if(c - jump >= 0){
-            queue.push({r: r, c: c - jump, d: d+1})
+            queue.push({r: r, c: c - jump, d: d+1, j: jump*-1})
         }
     }
 
-    // var reachable = visited[n-1][n-1] === -1 ? true : false
+    var reachable = grid[n-1][n-1].isVisited ? true : false
+    if(reachable){
+        var step = stack.pop()
+        grid[step.r][step.c].isPath = true
+        var curr = step
+        while(stack.length){
+            console.log("run")
+            console.log(curr)
+            curr = stack.pop()
+            if(curr.d !== step.d-1){continue}
+            if(curr.r===step.r && curr.c===step.c-step.j){
+                grid[curr.r][curr.c].isPath = true
+                step = curr
+            }else if(curr.c===step.c && curr.r===step.r-step.j){
+                grid[curr.r][curr.c].isPath = true
+                step = curr
+            }
+        }
+    }
 
-    // visitedNodesInOrder.forEach((node) => {
-    //     grid[node.row][node.col].isVisited = false
-    // })
     return visitedNodesInOrder
   }
   
