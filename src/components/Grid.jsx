@@ -22,17 +22,8 @@ export default class Grid extends React.Component {
     }
 
     componentDidMount(){
-        // var result = this.generateGrid();
-        // var cells = result[0]
-        // var refs = result[1]
-        // this.setState({
-        //     cells: cells,
-        //     refs: refs,
-        //     loading: false
-        // })
         const n = prompt("Enter grid size (5,7,9,11)")
         const grid = getInitialGrid(n);
-        // console.log(grid)
         this.setState({grid, n});
     }
 
@@ -68,6 +59,7 @@ export default class Grid extends React.Component {
 
     animateClimb = (newK, changedNodes) => {
         document.getElementById(`k-value`).innerText = `k = ${newK}`
+ 
         for(let i = 0; i <= changedNodes.length; i++){
             if(i===changedNodes.length){
                 setTimeout(() => {
@@ -86,13 +78,28 @@ export default class Grid extends React.Component {
         }
     }
 
+    clean = () => {
+        var grid = this.state.grid
+        for(let i = 0; i < this.state.grid.length; i++){
+            for(let j = 0; j < this.state.grid.length; j++){
+                document.getElementById(`node-${i}-${j}`).className ='node'
+                document.getElementById(`depth-${i}-${j}`).className = "depthCount"
+                document.getElementById(`depth-${i}-${j}`).innerText = ""
+                grid[i][j].isPath = false
+                grid[i][j].isVisited=false
+                grid[i][j].depth = 0
+            }
+        }
+        this.setState({grid})
+    }
+
     optimize = () => {
         const iter = prompt("Iteration count?")
         var currK = this.state.k
 
+        this.clean()
         var res = climb(this.state.grid, this.state.n, iter, currK)
         var newK = res[0]
-        console.log(newK)
         var changedNodes = res[1]
         this.animateClimb(newK, changedNodes)
     }

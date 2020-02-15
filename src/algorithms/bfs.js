@@ -1,18 +1,20 @@
 
 export function bfs(grid, n) {
     const visitedNodesInOrder = [];
-    
-    var stack=[]
+    const stack=[]
+
     var queue=[{r: 0, c: 0, d: 0, j: 0}]
     grid.forEach((row, i) => {
         row.forEach((node, j) => {
             node.isVisited = false
+            node.isPath = false
+            
         })
     })
 
     while(queue.length){
         var coord = queue.shift()
-        const {r, c, d, j} = coord
+        const {r, c, d} = coord
 
         if(grid[r][c].isVisited){continue}
         stack.push(coord)
@@ -45,8 +47,6 @@ export function bfs(grid, n) {
         grid[step.r][step.c].isPath = true
         var curr = step
         while(stack.length){
-            console.log("run")
-            console.log(curr)
             curr = stack.pop()
             if(curr.d !== step.d-1){continue}
             if(curr.r===step.r && curr.c===step.c-step.j){

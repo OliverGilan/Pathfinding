@@ -7,7 +7,6 @@ export function climb(grid, n, count, k) {
     var currK = k
     var i
     for(i = 0; i < count; i++){
-        console.log(currK)
         var x = Math.floor(Math.random()*n)
         var y = Math.floor(Math.random()*n)
         if(x === n-1 && y === n-1){i--;continue}
