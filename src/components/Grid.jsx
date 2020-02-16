@@ -1,6 +1,5 @@
 import React from 'react';
 import '../App.css';
-// import Cell from './Cell'
 import Node from './Node'
 import {bfs} from '../algorithms/bfs'
 import {evaluate} from '../algorithms/evaluate'
@@ -8,6 +7,7 @@ import {climb} from '../algorithms/hillclimb'
 import {generateVal} from '../algorithms/generateVal'
 import {shortestPath} from '../algorithms/shortestpath'
 import {astar} from '../algorithms/astar'
+var now = require("performance-now")
 
 export default class Grid extends React.Component {
     constructor(props){
@@ -59,8 +59,10 @@ export default class Grid extends React.Component {
         document.getElementById(`optimize-btn`).style.display = 'block'
     }
 
-    animateClimb = (newK, changedNodes) => {
+    animateClimb = (newK, changedNodes, performance) => {
         document.getElementById(`k-value`).innerText = `k = ${newK}`
+        document.getElementById(`time-value`).innerText = `time = ${performance}ms`
+        document.getElementById(`time-value`).style.display = `block`
  
         for(let i = 0; i <= changedNodes.length; i++){
             if(i===changedNodes.length){
@@ -87,10 +89,12 @@ export default class Grid extends React.Component {
         var currK = this.state.k
 
         // this.clean()
+        var t0 = now()
         var res = climb(this.state.grid, this.state.n, iter, currK)
+        var t1 = now()
         var newK = res[0]
         var changedNodes = res[1]
-        this.animateClimb(newK, changedNodes)
+        this.animateClimb(newK, changedNodes, t1-t0)
     }
 
     animateSPF = (visitedNodes) => {
@@ -145,6 +149,7 @@ export default class Grid extends React.Component {
             <div className="board" style={{marginBottom: 25}}>
                 <h1>{this.state.n}x{this.state.n}</h1>
                 <h4 id="k-value" style={{display:"none"}}>.</h4>
+                <h4 id="time-value" style={{display:"none"}}>.</h4>
                 <button id="eval-btn" onClick={this.evaluate}>Evaluate</button>
                 <button id="optimize-btn" onClick={this.optimize} style={{display:"none"}}>Optimize w/ Hill Climbing</button>
                 <button id="spf-btn" onClick={this.spf} style={{display:"none"}}>Solve w/ SPF</button>
