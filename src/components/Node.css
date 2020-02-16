@@ -24,6 +24,28 @@
   animation-play-state: running;
 }
 
+.node-spf-path {
+  animation-name: spfAnimation;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.node-astar-path {
+  animation-name: astarAnimation;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
 .node-optimized {
   animation-name: optimizedAnimation;
   animation-duration: 1.5s;
@@ -92,6 +114,50 @@
   100% {
     transform: scale(1);
     background-color: rgba(111, 209, 0, 0.75);
+  }
+}
+
+@keyframes spfAnimation {
+  0% {
+    transform: scale(0.3);
+    background-color: rgba(0, 190, 218, 0.75);
+    border-radius: 100%;
+  }
+
+  50% {
+    background-color: rgba(214, 192, 0, 0.75);
+  }
+
+  75% {
+    transform: scale(1.2);
+    background-color: rgba(209, 62, 0, 0.75);
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: rgba(209, 0, 0, 0.863);
+  }
+}
+
+@keyframes astarAnimation {
+  0% {
+    transform: scale(0.3);
+    background-color: rgba(0, 190, 218, 0.75);
+    border-radius: 100%;
+  }
+
+  50% {
+    background-color: rgba(0, 14, 214, 0.75);
+  }
+
+  75% {
+    transform: scale(1.2);
+    background-color: rgba(209, 0, 157, 0.75);
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: rgba(143, 0, 209, 0.863);
   }
 }
 

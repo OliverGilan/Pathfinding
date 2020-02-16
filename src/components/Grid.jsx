@@ -6,6 +6,8 @@ import {bfs} from '../algorithms/bfs'
 import {evaluate} from '../algorithms/evaluate'
 import {climb} from '../algorithms/hillclimb'
 import {generateVal} from '../algorithms/generateVal'
+import {shortestPath} from '../algorithms/shortestpath'
+import {astar} from '../algorithms/astar'
 
 export default class Grid extends React.Component {
     constructor(props){
@@ -64,6 +66,8 @@ export default class Grid extends React.Component {
             if(i===changedNodes.length){
                 setTimeout(() => {
                     this.evaluate()
+                    document.getElementById('spf-btn').style.display = 'block';
+                    document.getElementById('astar-btn').style.display = 'block';
                 }, 50 * i)
                 continue
             }
@@ -78,36 +82,64 @@ export default class Grid extends React.Component {
         }
     }
 
-    clean = () => {
-        var grid = this.state.grid
-        for(let i = 0; i < this.state.grid.length; i++){
-            for(let j = 0; j < this.state.grid.length; j++){
-                document.getElementById(`node-${i}-${j}`).className ='node'
-                document.getElementById(`depth-${i}-${j}`).className = "depthCount"
-                document.getElementById(`depth-${i}-${j}`).innerText = ""
-                grid[i][j].isPath = false
-                grid[i][j].isVisited=false
-                grid[i][j].depth = 0
-            }
-        }
-        this.setState({grid})
-    }
-
     optimize = () => {
         const iter = prompt("Iteration count?")
         var currK = this.state.k
 
-        this.clean()
+        // this.clean()
         var res = climb(this.state.grid, this.state.n, iter, currK)
         var newK = res[0]
         var changedNodes = res[1]
         this.animateClimb(newK, changedNodes)
     }
 
+    animateSPF = (visitedNodes) => {
+        for (let i = 0; i <= visitedNodes.length; i++) {
+            setTimeout(() => {
+              const node = visitedNodes[i];
+              if (node !== undefined && node.isPath){
+                document.getElementById(`node-${node.row}-${node.col}`).className =
+                    'node node-spf-path';
+                document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
+                document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
+              }else if (node !== undefined){
+                document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
+                document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
+              }
+            }, 10 * i);
+        }
+    }
+
+    animateAstar = (visitedNodes) => {
+        for (let i = 0; i <= visitedNodes.length; i++) {
+            setTimeout(() => {
+              const node = visitedNodes[i];
+              if (node !== undefined && node.isPath){
+                document.getElementById(`node-${node.row}-${node.col}`).className =
+                    'node node-astar-path';
+                document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
+                document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
+              }else if (node !== undefined){
+                document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
+                document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
+              }
+            }, 10 * i);
+        }
+    }
+
+    spf = () => {
+        const {grid, n} = this.state
+        const visitedNodes = shortestPath(grid, n)
+        this.animateSPF(visitedNodes)
+    }
+
+    runastar = () => {
+        const {grid, n} = this.state
+        const visitedNodes = astar(grid, n)
+        this.animateAstar(visitedNodes)
+    }
+
     render(){
-        // if(this.state.loading){
-        //     return(<div>Loading</div>)
-        // }
         const grid = this.state.grid
         return (
             <div className="board" style={{marginBottom: 25}}>
@@ -115,6 +147,8 @@ export default class Grid extends React.Component {
                 <h4 id="k-value" style={{display:"none"}}>.</h4>
                 <button id="eval-btn" onClick={this.evaluate}>Evaluate</button>
                 <button id="optimize-btn" onClick={this.optimize} style={{display:"none"}}>Optimize w/ Hill Climbing</button>
+                <button id="spf-btn" onClick={this.spf} style={{display:"none"}}>Solve w/ SPF</button>
+                <button id="astar-btn" onClick={this.runastar} style={{display:"none"}}>Solve w/ A*</button>
                 {grid.map((row, i) => {
                     return <div className="row" key={i}>
                         {row.map((cell, j) => {
