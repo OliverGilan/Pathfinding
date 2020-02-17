@@ -7,7 +7,7 @@ export function astar(grid, n) {
 
     var comparator = function(a,b){ return b.h - a.h }
     var queue = new pq({comparator: comparator})
-    queue.queue({r: 0, c: 0, d: 0, h: manhattan_distance({x: 0, y: 0},{x: n-1, y: n-1})})
+    queue.queue({r: 0, c: 0, d: 0, j: 0, h: manhattan_distance({x: 0, y: 0},{x: n-1, y: n-1})})
     clean(grid)
 
     while(queue.length){

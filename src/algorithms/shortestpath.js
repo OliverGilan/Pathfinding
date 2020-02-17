@@ -7,7 +7,7 @@ export function shortestPath(grid, n) {
 
     var comparator = function(a,b){ return a.d - b.d }
     var queue = new pq({comparator: comparator})
-    queue.queue({r: 0, c: 0, d: 0})
+    queue.queue({r: 0, c: 0, d: 0, j:0})
     clean(grid)
 
     while(queue.length){
