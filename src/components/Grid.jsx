@@ -21,6 +21,7 @@ export default class Grid extends React.Component {
             k: 0
         }
         this.cellRef = []
+        this.updateState = this.updateState.bind(this)
     }
 
     componentDidMount(){
@@ -63,7 +64,6 @@ export default class Grid extends React.Component {
         document.getElementById(`k-value`).innerText = `k = ${newK}`
         document.getElementById(`time-value`).innerText = `time = ${performance}ms`
         document.getElementById(`time-value`).style.display = `block`
-        var grid = this.state.grid
  
         for(let i = 0; i <= changedNodes.length; i++){
             if(i===changedNodes.length){
@@ -77,8 +77,6 @@ export default class Grid extends React.Component {
             setTimeout(() => {
                 const node = changedNodes[i];
                 if (node !== undefined){
-                    grid[node.row][node.col].val = node.val
-                    grid[node.row][node.col].depth = node.depth
                     document.getElementById(`node-${node.row}-${node.col}`).className ='node node-optimized'
                     document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth
                     document.getElementById(`val-${node.row}-${node.col}`).innerText = node.val;
@@ -86,7 +84,19 @@ export default class Grid extends React.Component {
                 }
             }, 10 * i)
         }
+    }
+
+    updateState = (changedNodes) => {
+        var grid = this.state.grid
+
+        for(let i = 0; i < changedNodes.length; i++){
+            const node = changedNodes[i]
+            grid[node.row][node.col].val = node.val
+            grid[node.row][node.col].depth = node.depth
+        }
+
         this.setState({grid})
+        
     }
 
     optimize = () => {
@@ -99,6 +109,7 @@ export default class Grid extends React.Component {
         var t1 = now()
         var newK = res[0]
         var changedNodes = res[1]
+        this.updateState(changedNodes)
         this.animateClimb(newK, changedNodes, t1-t0)
     }
 
