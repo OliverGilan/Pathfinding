@@ -49,9 +49,11 @@ export function shortestPath(grid, n) {
             if(curr.d !== step.d-1){continue}
             if(curr.r===step.r && curr.c===step.c-step.j){
                 grid[curr.r][curr.c].isPath = true
+                console.log(grid[curr.r][curr.c].val)
                 step = curr
             }else if(curr.c===step.c && curr.r===step.r-step.j){
                 grid[curr.r][curr.c].isPath = true
+                console.log(grid[curr.r][curr.c].val)
                 step = curr
             }
         }

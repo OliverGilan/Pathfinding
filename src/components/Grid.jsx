@@ -63,6 +63,7 @@ export default class Grid extends React.Component {
         document.getElementById(`k-value`).innerText = `k = ${newK}`
         document.getElementById(`time-value`).innerText = `time = ${performance}ms`
         document.getElementById(`time-value`).style.display = `block`
+        var grid = this.state.grid
  
         for(let i = 0; i <= changedNodes.length; i++){
             if(i===changedNodes.length){
@@ -76,12 +77,16 @@ export default class Grid extends React.Component {
             setTimeout(() => {
                 const node = changedNodes[i];
                 if (node !== undefined){
+                    grid[node.row][node.col].val = node.val
+                    grid[node.row][node.col].depth = node.depth
                     document.getElementById(`node-${node.row}-${node.col}`).className ='node node-optimized'
                     document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth
                     document.getElementById(`val-${node.row}-${node.col}`).innerText = node.val;
+                    
                 }
             }, 10 * i)
         }
+        this.setState({grid})
     }
 
     optimize = () => {
