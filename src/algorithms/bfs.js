@@ -5,13 +5,6 @@ export function bfs(grid, n) {
     const stack=[]
 
     var queue=[{r: 0, c: 0, d: 0, j: 0}]
-    // grid.forEach((row, i) => {
-    //     row.forEach((node, j) => {
-    //         node.isVisited = false
-    //         node.isPath = false
-
-    //     })
-    // })
     clean(grid)
 
     while(queue.length){
