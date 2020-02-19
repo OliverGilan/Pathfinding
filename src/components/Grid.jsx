@@ -134,12 +134,12 @@ export default class Grid extends React.Component {
 
     optimizeGenetics = () => {
         const {grid, n, k} = this.state
-
-        var results = genetic(grid, n, k, 100)
-        if(results[0] === -1){
-            alert("Genetic algorithm produced worse grid (devolution?) and was discarded")
-            return
-        }
+        var iterationCount = prompt("How many iterations?")
+        var results = genetic(grid, n, k, iterationCount)
+        // if(results[0] === -1){
+        //     alert("Genetic algorithm produced worse grid (devolution?) and was discarded")
+        //     return
+        // }
         this.animateGenetics(results)
     }
 

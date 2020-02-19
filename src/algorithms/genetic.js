@@ -40,7 +40,7 @@ export function genetic(original, n, k, iterations) {
     var bestK = bestChild.k
 
     if(bestK < k){
-        return [-1, -1]
+        return [k, original]
     }else{
         return [bestK, bestGrid]
     }
