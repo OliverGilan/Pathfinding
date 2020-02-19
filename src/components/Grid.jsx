@@ -73,7 +73,7 @@ export default class Grid extends React.Component {
                     this.evaluate()
                     // document.getElementById('spf-btn').style.display = 'block';
                     // document.getElementById('astar-btn').style.display = 'block';
-                }, 50 * i)
+                }, 10 * i)
                 continue
             }
             setTimeout(() => {
@@ -115,7 +115,9 @@ export default class Grid extends React.Component {
         this.animateClimb(newK, changedNodes, t1-t0)
     }
 
-    animateGenetics = (results) => {
+    animateGenetics = (results, performance) => {
+        document.getElementById(`time-value`).innerText = `time = ${performance}ms`
+        document.getElementById(`time-value`).style.display = `block`
         this.setState({grid: results[1], k: results[0]})
         document.getElementById(`k-value`).innerText = `k = ${results[0]}`
         // document.getElementById(`time-value`).innerText = `time = ${performance}ms`
@@ -135,12 +137,14 @@ export default class Grid extends React.Component {
     optimizeGenetics = () => {
         const {grid, n, k} = this.state
         var iterationCount = prompt("How many iterations?")
+        var t2 = now()
         var results = genetic(grid, n, k, iterationCount)
+        var t3 = now()
         // if(results[0] === -1){
         //     alert("Genetic algorithm produced worse grid (devolution?) and was discarded")
         //     return
         // }
-        this.animateGenetics(results)
+        this.animateGenetics(results, t3-t2)
     }
 
     animateSPF = (visitedNodes) => {
