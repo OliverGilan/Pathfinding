@@ -150,7 +150,7 @@ export default class Grid extends React.Component {
                     'node node-astar-path';
                 document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
                 document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
-              }else if (node !== undefinsed){
+              }else if (node !== undefined){
                 document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
                 document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
               }
