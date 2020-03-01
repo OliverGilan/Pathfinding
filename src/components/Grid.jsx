@@ -45,7 +45,7 @@ export default class Grid extends React.Component {
                 document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
                 document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
               }
-            }, 10 * i);
+            }, 20 * i);
         }
     }
 
@@ -56,26 +56,11 @@ export default class Grid extends React.Component {
         this.animateBFS(visitedNodesInOrder)
         const k = evaluate(grid, n)
         this.setState({k});
-        document.getElementById("k-value").innerText = `k = ${k}`
-        document.getElementById(`k-value`).style.display = 'block'
-        // document.getElementById(`eval-btn`).style.display = 'none'
-        // document.getElementById(`optimize-btn`).style.display = 'block'
     }
 
     animateClimb = (newK, changedNodes, performance) => {
-        document.getElementById(`k-value`).innerText = `k = ${newK}`
-        document.getElementById(`time-value`).innerText = `time = ${performance}ms`
-        document.getElementById(`time-value`).style.display = `block`
  
         for(let i = 0; i <= changedNodes.length; i++){
-            if(i===changedNodes.length){
-                setTimeout(() => {
-                    this.evaluate()
-                    // document.getElementById('spf-btn').style.display = 'block';
-                    // document.getElementById('astar-btn').style.display = 'block';
-                }, 10 * i)
-                continue
-            }
             setTimeout(() => {
                 const node = changedNodes[i];
                 if (node !== undefined){
@@ -116,12 +101,7 @@ export default class Grid extends React.Component {
     }
 
     animateGenetics = (results, performance) => {
-        document.getElementById(`time-value`).innerText = `time = ${performance}ms`
-        document.getElementById(`time-value`).style.display = `block`
         this.setState({grid: results[1], k: results[0]})
-        document.getElementById(`k-value`).innerText = `k = ${results[0]}`
-        // document.getElementById(`time-value`).innerText = `time = ${performance}ms`
-        // document.getElementById(`time-value`).style.display = `block`
         for(let i = 0; i < this.state.n; i++){
             for(let j = 0; j < this.state.n; j++){
                 setTimeout(() => {
@@ -140,10 +120,7 @@ export default class Grid extends React.Component {
         var t2 = now()
         var results = genetic(grid, n, k, iterationCount)
         var t3 = now()
-        // if(results[0] === -1){
-        //     alert("Genetic algorithm produced worse grid (devolution?) and was discarded")
-        //     return
-        // }
+
         this.animateGenetics(results, t3-t2)
     }
 
@@ -173,11 +150,11 @@ export default class Grid extends React.Component {
                     'node node-astar-path';
                 document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
                 document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
-              }else if (node !== undefined){
+              }else if (node !== undefinsed){
                 document.getElementById(`depth-${node.row}-${node.col}`).className = "depthVisited";
                 document.getElementById(`depth-${node.row}-${node.col}`).innerText = node.depth;
               }
-            }, 10 * i);
+            }, 20 * i);
         }
     }
 
@@ -201,14 +178,10 @@ export default class Grid extends React.Component {
         const grid = this.state.grid
         return (
             <div className="board" style={{marginBottom: 25}}>
-                <h1>{this.state.n}x{this.state.n}</h1>
-                <h4 id="k-value" style={{display:"none"}}>.</h4>
-                <h4 id="time-value" style={{display:"none"}}>.</h4>
                 <button id="eval-btn" onClick={this.evaluate}>Evaluate</button>
-                <button id="optimize-btn" onClick={this.optimize} >Optimize w/ Hill Climbing</button>
-                <button id="genetic-btn" onClick={this.optimizeGenetics} >Optimize w/ Genetic algorithms</button>
-                <button id="spf-btn" onClick={this.spf} >Solve w/ SPF</button>
                 <button id="astar-btn" onClick={this.runastar} >Solve w/ A*</button>
+                <h5>{this.state.n}x{this.state.n}</h5>
+                
                 {grid.map((row, i) => {
                     return <div className="row" key={i}>
                         {row.map((cell, j) => {
